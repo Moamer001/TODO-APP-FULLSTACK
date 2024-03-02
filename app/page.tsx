@@ -1,15 +1,19 @@
+import { getTodoListAction } from "@/actions/todo.actions";
 import AddTodoForm from "@/components/AddTodoForm";
-import { todo } from "node:test";
+import TodoTable from "@/components/TodoTable";
 
-export default function Home() {
+export default async function Home() {
+  const todos = await getTodoListAction();
   return (
     <main className="container">
-      {/* <ul>
+      <AddTodoForm />
+      <TodoTable />
+
+      <ul>
         {todos.map((todo) => (
           <li key={todo.id}>{todo.title}</li>
         ))}
-      </ul> */}
-      <AddTodoForm />
+      </ul>
     </main>
   );
 }
