@@ -26,11 +26,13 @@ import { TodoFormValues, todoFormSchema } from "@/scihma";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTodoAction } from "@/actions/todo.actions";
+import { Checkbox } from "./ui/checkbox";
 
 const AddTodoForm = () => {
   const defaultValues: Partial<TodoFormValues> = {
-    title: "DEFAULT TITLE",
-    body: "DEFAULT BODY",
+    title: "",
+    body: "",
+    completed: false,
   };
   // const todos = await getTodoListAction();
   const form = useForm<TodoFormValues>({
@@ -39,7 +41,11 @@ const AddTodoForm = () => {
     mode: "onChange",
   });
   const onSubmit = async (data: TodoFormValues) => {
-    await createTodoAction({ title: data.title, body: data.body });
+    await createTodoAction({
+      title: data.title,
+      body: data.body,
+      completed: data.completed,
+    });
   };
   return (
     <Dialog>
@@ -90,6 +96,24 @@ const AddTodoForm = () => {
                     <FormDescription>
                       You can write Short Description about your next todo.
                     </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="completed"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onChecedChange={field.onChange}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormLabel>Completed</FormLabel>
+
                     <FormMessage />
                   </FormItem>
                 )}
