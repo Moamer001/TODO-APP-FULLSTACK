@@ -1,7 +1,7 @@
 export interface Itodo {
-    id: string;
+    id?: string;
     title: string;
     body: string | null;
     completed: boolean;
-    createdAt: Date;
+    createdAt?: Date;
 }

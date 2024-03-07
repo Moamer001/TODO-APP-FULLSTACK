@@ -1,4 +1,5 @@
 "use server"
+import { Itodo } from "@/interfacses";
 import { TodoFormValues } from "@/scihma";
 import { PrismaClient } from "@prisma/client"
 import { revalidatePath } from "next/cache";
@@ -18,7 +19,20 @@ export const createTodoAction = async ({title , body,completed} :TodoFormValues)
    }})
   revalidatePath("/")
 }
-export const updateTodoAction = async ()=>{}
+export const updateTodoAction = async ({id,body,title,completed}:Itodo)=>{
+  await prisma.todo.update({
+    where:{
+      id,
+    },
+    data:{
+      body,
+      completed,
+      title
+    }
+  })
+  revalidatePath("/")
+
+}
 export const deleteTodoAction = async ({id}:{id:string})=>{
   await prisma.todo.delete({
     where:{
