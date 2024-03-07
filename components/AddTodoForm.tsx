@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -27,8 +26,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTodoAction } from "@/actions/todo.actions";
 import { Checkbox } from "./ui/checkbox";
+import { useState } from "react";
+import Spinner from "./Spinner";
 
 const AddTodoForm = () => {
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const defaultValues: Partial<TodoFormValues> = {
     title: "",
     body: "",
@@ -40,15 +43,19 @@ const AddTodoForm = () => {
     defaultValues,
     mode: "onChange",
   });
-  const onSubmit = async (data: TodoFormValues) => {
+  const onSubmit = async ({ title, body, completed }: TodoFormValues) => {
+    setLoading(true);
     await createTodoAction({
-      title: data.title,
-      body: data.body,
-      completed: data.completed,
+      title,
+      body,
+      completed,
     });
+    setLoading(false);
+    setOpen(false);
+    form.reset();
   };
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           {" "}
@@ -57,10 +64,7 @@ const AddTodoForm = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle>Add a new Todo</DialogTitle>
         </DialogHeader>
 
         <div className="py-4">
@@ -118,7 +122,16 @@ const AddTodoForm = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Add</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    {" "}
+                    <Spinner /> Saving{" "}
+                  </>
+                ) : (
+                  "Save"
+                )}
+              </Button>
             </form>
           </Form>
         </div>

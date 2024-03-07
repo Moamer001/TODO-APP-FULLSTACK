@@ -8,8 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "./ui/Button";
-import { Pen, Trash } from "lucide-react";
+import { Itodo } from "@/interfacses";
+import { Badge } from "./ui/badge";
+import TodoTableActions from "./TodoTableActions";
 
 const invoices = [
   {
@@ -56,7 +57,7 @@ const invoices = [
   },
 ];
 
-export default function TodoTable() {
+export default function TodosTable({ todos }: { todos: Itodo[] }) {
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -69,18 +70,19 @@ export default function TodoTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">656555546465456hgfgfg</TableCell>
-            <TableCell>my new todo</TableCell>
-            <TableCell>completed</TableCell>
+        {todos.map((todo) => (
+          <TableRow key={todo.id}>
+            <TableCell className="font-medium">{todo.id}</TableCell>
+            <TableCell>{todo.title}</TableCell>
+            <TableCell>
+              {todo.completed ? (
+                <Badge>Completed</Badge>
+              ) : (
+                <Badge variant={"secondary"}>Uncompleted</Badge>
+              )}
+            </TableCell>
             <TableCell className=" flex items-center justify-end space-x-2">
-              <Button size={"icon"}>
-                <Pen size={16} />
-              </Button>
-              <Button size={"icon"} variant={"destructive"}>
-                <Trash size={16} />
-              </Button>
+              <TodoTableActions id={todo.id} />
             </TableCell>
           </TableRow>
         ))}
@@ -88,7 +90,7 @@ export default function TodoTable() {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">{invoices.length}</TableCell>
+          <TableCell className="text-right">{todos.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
